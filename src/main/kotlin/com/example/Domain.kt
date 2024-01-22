@@ -1,8 +1,7 @@
 package com.example
 
-class Domain {
-    private val userRepo = UserRepo()
-    private val supplyChainRepo = SupplyChainRepo()
+class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
+
     fun getDirectSuppliersForUser(userId: String): List<String> {
 
         //todo: Handle Errors
