@@ -2,17 +2,17 @@ package com.example
 
 fun main(args: Array<String>) {
 
-// dependency injection so we can now control these things
+// dependency injection so we can now control userRepo and supplyChainRepoJSON
     val userRepo: UserRepo = FileUserRepo()
-    val supplyChainRepo = SupplyChainRepo()
+    val supplyChainRepoJSON: SupplyChainRepo = SupplyChainRepoJSON()
 
-    val domain = Domain(userRepo, supplyChainRepo )
-    val supplierIds: List<String> = domain.getDirectSuppliersForUser("ZU123")
-    println("Supplier Ids: ${supplierIds}")
+    val domain = Domain(userRepo, supplyChainRepoJSON )
+    val directSupplierIds: List<String> = domain.getDirectSuppliersForUser("ZU123")
+    println("direct supplier Ids: ${directSupplierIds}")
 }
 
-interface UserRepo {
-    fun fetchCompanyIdThatUserBelongsTo(userId: Any): String
-}
+
+
+
 
 

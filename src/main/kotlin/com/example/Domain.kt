@@ -8,12 +8,12 @@ class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
         val companyId: String = userRepo.fetchCompanyIdThatUserBelongsTo(userId)
         println("company Id: ${companyId}")
 
-
         //todo: Handle Errors
         val supplyChain: SupplyChain = supplyChainRepo.fetchCompanySupplyChain(companyId)
 
         val directSupplierIds: List<String> = findDirectSuppliersForCompany(supplyChain, companyId)
         println("directSupplierIds: ${directSupplierIds}")
+
         return directSupplierIds
     }
 
@@ -22,5 +22,5 @@ class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
     }
 }
 
-class SupplyChain(val directSuppliers: List<String>) {
+data class SupplyChain(val directSuppliers: List<String>) {
 }

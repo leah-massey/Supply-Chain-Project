@@ -3,15 +3,15 @@ As an admin, at a top level customer organisation, I want to view a list of my d
 
 Spec:
 Given a user [U] is present in a top level customer organisation [O]
-And a organisation O has a  list of direct suppliers [DirSup]
-When U requests a list of direct suppliers
-Then a list of O's DirSup is returned
+And a organisation [O] has a  list of direct suppliers [DirSup]
+When [U] requests a list of direct suppliers
+Then [DirSup] is returned
 
-Test: single direct supplier
-- Somehow create scenario that : when domain tries to look up company for ZU123 it gets back ZC789
-- Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes direct suppliers (ZS456)
+Test: [O] only has one direct supplier in [DirSup]
+- Somehow create scenario that : when domain tries to look up company for ZU123 it gets back company ZC789
+- Somehow create scenario that : When domain tries to look up a list of suppliers for ZC789 it gets back a supply chain that includes direct suppliers (ZS456) (ie. listOf("ZS456"))
 - When a user queries the domain for the direct suppliers
-- Then assert that reply [ZS456]
+- Then assert that reply [ZS456] (ie.listOf("ZS456"))
 
 Test: single direct supplier
 - Somehow create scenario that : when domain tries to look up company for ZU122 it gets back ZC788
