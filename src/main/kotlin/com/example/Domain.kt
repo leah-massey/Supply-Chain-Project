@@ -22,5 +22,5 @@ class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
     }
 }
 
-data class SupplyChain(val directSuppliers: List<String>) {
+data class SupplyChain(val directSuppliers: List<String>, val indirectSuppliers: List<String>) {
 }

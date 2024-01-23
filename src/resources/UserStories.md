@@ -13,19 +13,28 @@ Test: [O] only has one direct supplier in [DirSup]
 - When a user queries the domain for the direct suppliers
 - Then assert that reply [ZS456] (ie.listOf("ZS456"))
 
-Test: single direct supplier
+Test: [O] has multiple direct suppliers in [DirSup] 
 - Somehow create scenario that : when domain tries to look up company for ZU122 it gets back ZC788
-- Somehow create scenario that : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455)
+- Somehow create scenario that : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455, ZS456)
 - When a user queries the domain for the direct suppliers
-- Then assert that reply [ZS455]
+- Then assert that reply [ZS455, ZS456]
 
-Test: multiple direct suppliers
-- Somehow create scenario that : when domain tries to look up company for ZU123 it gets back ZC789
-- Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes direct suppliers (ZS456, ZS111, ZS222)
+
+
+
+Test: [O] has both direct and indirect suppliers 
+- Somehow create scenario that : when domain tries to look up company for ZU122 it gets back ZC788
+- Somehow create scenario that : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455, ZS456) and indirect suppliers (ZS457)
 - When a user queries the domain for the direct suppliers
-- Then assert that reply [ZS456, ZS111, ZS222]
+- Then assert that reply [ZS455, ZS456]
 
 Test: no direct suppliers
+- Somehow create scenario that : when domain tries to look up company for ZU123 it gets back ZC789
+- Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes no direct suppliers
+- When a user queries the domain for the direct suppliers
+- Then assert that reply []
+
+Test: no direct suppliers but some indirect
 - Somehow create scenario that : when domain tries to look up company for ZU123 it gets back ZC789
 - Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes no direct suppliers
 - When a user queries the domain for the direct suppliers

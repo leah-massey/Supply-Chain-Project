@@ -28,10 +28,13 @@ class MainKtTest {
             override fun fetchCompanySupplyChain(companyId: Any): SupplyChain {
                 if (companyId == "ZC789") {
                     return SupplyChain(
-                        directSuppliers = listOf("ZS456")
+                        directSuppliers = listOf("ZS456"),
+                        indirectSuppliers = listOf("")
                     )
                 }
-                return SupplyChain(directSuppliers = listOf(""))
+                return SupplyChain(
+                    directSuppliers = listOf(""),
+                    indirectSuppliers = listOf(""))
             }
         }
 
@@ -63,10 +66,14 @@ class MainKtTest {
             override fun fetchCompanySupplyChain(companyId: Any): SupplyChain {
                 if (companyId == "ZC788") {
                     return SupplyChain(
-                            directSuppliers = listOf("ZS455", "ZS457")
+                            directSuppliers = listOf("ZS455", "ZS457"),
+                            indirectSuppliers = listOf("")
                         )
                     }
-            return SupplyChain(listOf(""))
+            return SupplyChain(
+                directSuppliers = listOf(""),
+                indirectSuppliers = listOf("")
+            )
             }
         }
 
@@ -75,6 +82,43 @@ class MainKtTest {
         val actual = domain.getDirectSuppliersForUser("ZU122")
 
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `When 'O' has both direct and indirect suppliers, only direct suppliers are returned to th 'U'`() {
+
+//      Somehow create scenario that : when domain tries to look up company for ZU122 it gets back ZC788
+        val userRepoThatReturnsFixedUser = object : UserRepo {
+            override fun fetchCompanyIdThatUserBelongsTo(userId: Any): String {
+                if (userId == "ZU122") {
+                    return "ZC788"
+                }
+                return ""
+            }
+        }
+
+//      Somehow create scenario that : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455, ZS456) and indirect suppliers (ZS457)
+        val supplyChainRepoThatReturnsAFixedCombinationOfDirectAndIndirectSuppliers = object: SupplyChainRepo {
+            override fun fetchCompanySupplyChain(companyId: Any): SupplyChain {
+                if (companyId == "ZC788") {
+                    return SupplyChain(
+                        directSuppliers = listOf("ZS455", "ZS456"),
+                        indirectSuppliers = listOf("ZS457")
+                    )
+                }
+                return SupplyChain(
+                    directSuppliers = listOf(""),
+                    indirectSuppliers = listOf("")
+                )
+            }
+        }
+
+        val domain = Domain(userRepoThatReturnsFixedUser, supplyChainRepoThatReturnsAFixedCombinationOfDirectAndIndirectSuppliers)
+        val expected = listOf("ZS455", "ZS456")
+        val actual = domain.getDirectSuppliersForUser("ZU122")
+
+        assertEquals(expected, actual)
+
     }
 
 }
