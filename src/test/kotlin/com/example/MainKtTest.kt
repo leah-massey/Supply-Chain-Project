@@ -7,7 +7,7 @@ class MainKtTest {
 
 //    Spec:
 //    Given a user [U] is present in a top level customer organisation [O]
-//    And a organisation [O] has a  list of direct suppliers [DirSup]
+//    And an organisation [O] has a  list of direct suppliers [DirSup]
 //    When [U] requests a list of direct suppliers
 //    Then [DirSup] is returned
 
@@ -85,7 +85,7 @@ class MainKtTest {
     }
 
     @Test
-    fun `When 'O' has both direct and indirect suppliers, only direct suppliers are returned to th 'U'`() {
+    fun `When 'O' has both direct and indirect suppliers, only direct suppliers are returned to the 'U'`() {
 
 //      Somehow create scenario that : when domain tries to look up company for ZU122 it gets back ZC788
         val userRepoThatReturnsFixedUser = object : UserRepo {
@@ -121,6 +121,41 @@ class MainKtTest {
 
     }
 
+    @Test
+    fun `When 'O' has no direct suppliers, an empty list is returned to 'U`() {
+
+//      Somehow create scenario that : when domain tries to look up company for ZU123 it gets back ZC789
+        val userRepoThatReturnsFixedUser = object : UserRepo {
+            override fun fetchCompanyIdThatUserBelongsTo(userId: Any): String {
+                if (userId == "ZU122") {
+                    return "ZC788"
+                }
+                return ""
+            }
+        }
+
+//      Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes no direct suppliers
+        val supplyChainRepoThatReturnsAFixedResponseThatHasNoDirectSuppliers = object: SupplyChainRepo {
+            override fun fetchCompanySupplyChain(companyId: Any): SupplyChain {
+                if (companyId == "ZC788") {
+                    return SupplyChain(
+                        directSuppliers = listOf(""),
+                        indirectSuppliers = listOf("ZS222")
+                    )
+                }
+                return SupplyChain(
+                    directSuppliers = listOf(""),
+                    indirectSuppliers = listOf("")
+                )
+            }
+        }
+
+        val domain = Domain(userRepoThatReturnsFixedUser, supplyChainRepoThatReturnsAFixedResponseThatHasNoDirectSuppliers)
+        val expected = listOf("")
+        val actual = domain.getDirectSuppliersForUser("ZU122")
+
+        assertEquals(expected, actual)
+    }
 }
 
 
