@@ -7,6 +7,7 @@ And a organisation [O] has a  list of direct suppliers [DirSup]
 When [U] requests a list of direct suppliers
 Then [DirSup] is returned
 
+### Tests for Domain
 Test: [O] only has one direct supplier in [DirSup]
 - Somehow create scenario that : when domain tries to look up company for ZU123 it gets back company ZC789
 - Somehow create scenario that : When domain tries to look up a list of suppliers for ZC789 it gets back a supply chain that includes direct suppliers (ZS456) (ie. listOf("ZS456"))
@@ -25,26 +26,22 @@ Test: [O] has both direct and indirect suppliers
 - When a user queries the domain for the direct suppliers
 - Then assert that reply [ZS455, ZS456]
 
-
-
-
-Test: [O] has no direct suppliers
+Test: [O] has no direct suppliers but some indirect
 - Somehow create scenario that : when domain tries to look up company for ZU123 it gets back ZC789
 - Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes no direct suppliers
 - When a user queries the domain for the direct suppliers
 - Then assert that reply []
 
-Test: no direct suppliers but some indirect
-- Somehow create scenario that : when domain tries to look up company for ZU123 it gets back ZC789
-- Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes no direct suppliers
-- When a user queries the domain for the direct suppliers
-- Then assert that reply []
+### Tests for UserRepoJson
+Test: [O] to which [U] belongs is returned as a string
+- When the domain queries the userRepo for the [O] of "ZC321"
+- Then assert that reply "ZU456"
 
-Test: no repeats in direct suppliers list
-- Somehow create scenario that : when domain tries to look up company for ZU123 it gets back ZC789
-- Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes direct suppliers (ZS456, ZS111, ZS222)
-- When a user queries the domain for the direct suppliers
-- Then assert there are no repeats in the reply ([ZS456, ZS111, ZS222])
+Test: an unrecognised user returns null
+- When the domain queries the userRepo with an invalid [U] "ZU450"
+- Then assert that reply is null 
+
+
 
 
 
