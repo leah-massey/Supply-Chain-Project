@@ -12,7 +12,7 @@ class UserRepoJSONTest {
 
         val underTest = UserRepoJSON()
         val expected: String = "ZC321"
-        val actual: String = underTest.fetchCompanyIdThatUserBelongsTo("ZU456")
+        val actual: String? = underTest.fetchCompanyIdThatUserBelongsTo("ZU456")
 
         assertEquals(expected, actual)
     }
@@ -22,7 +22,7 @@ class UserRepoJSONTest {
 
         val underTest = UserRepoJSON()
         val expected: String = "ERROR?"
-        val actual: String = underTest.fetchCompanyIdThatUserBelongsTo("ZU450")
+        val actual: String? = underTest.fetchCompanyIdThatUserBelongsTo("ZU450")
 
         assertEquals(expected, actual)
     }

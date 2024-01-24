@@ -1,5 +1,7 @@
 package com.example
 
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -16,21 +18,19 @@ class MainKtTest {
 
         //      Somehow create scenario that : when domain tries to look up company for ZU123 it gets back company ZC789
         val userRepoThatReturnsAFixedCompanyForAFixedUser = object : UserRepo {
-            override fun fetchCompanyIdThatUserBelongsTo(userId: Any): String {
+            override fun fetchCompanyIdThatUserBelongsTo(userId: String): String? {
                 if (userId == "ZU123") {
                     return "ZC789"
                 }
-                return "unknown user"
+                return null
             }
         }
-
-
         @Test
         fun `When 'O' only has one direct supplier in 'DirSup', that supplier is returned to the 'U'`() {
 
 //      Somehow create scenario that : When domain tries to look up a list of suppliers for ZC789 it gets back a supply chain that includes direct suppliers (ZS456) (ie. listOf("ZS456"))
             val supplyChainRepoThatReturnsFixedListOfOneDirectSupplier = object : SupplyChainRepo {
-                override fun fetchCompanySupplyChain(companyId: Any): SupplyChain {
+                override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
                     if (companyId == "ZC789") {
                         return SupplyChain(
                             directSuppliers = listOf("ZS456"),
@@ -58,8 +58,8 @@ class MainKtTest {
 
 //      Somehow create scenario that : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455, ZS456)
             val supplyChainRepoThatReturnsFixedListOfMultipleDirectSuppliers = object : SupplyChainRepo {
-                override fun fetchCompanySupplyChain(companyId: Any): SupplyChain {
-                    if (companyId == "ZC788") {
+                override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
+                    if (companyId == "ZC789") {
                         return SupplyChain(
                             directSuppliers = listOf("ZS455", "ZS457"),
                             indirectSuppliers = listOf("")
@@ -74,7 +74,7 @@ class MainKtTest {
 
             val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsFixedListOfMultipleDirectSuppliers)
             val expected = listOf("ZS455", "ZS457")
-            val actual = domain.getDirectSuppliersForUser("ZU122")
+            val actual = domain.getDirectSuppliersForUser("ZU123")
 
             assertEquals(expected, actual)
         }
@@ -84,8 +84,8 @@ class MainKtTest {
 
 //      Somehow create scenario that : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455, ZS456) and indirect suppliers (ZS457)
             val supplyChainRepoThatReturnsAFixedCombinationOfDirectAndIndirectSuppliers = object: SupplyChainRepo {
-                override fun fetchCompanySupplyChain(companyId: Any): SupplyChain {
-                    if (companyId == "ZC788") {
+                override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
+                    if (companyId == "ZC789") {
                         return SupplyChain(
                             directSuppliers = listOf("ZS455", "ZS456"),
                             indirectSuppliers = listOf("ZS457")
@@ -100,7 +100,7 @@ class MainKtTest {
 
             val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsAFixedCombinationOfDirectAndIndirectSuppliers)
             val expected = listOf("ZS455", "ZS456")
-            val actual = domain.getDirectSuppliersForUser("ZU122")
+            val actual = domain.getDirectSuppliersForUser("ZU123")
 
             assertEquals(expected, actual)
 
@@ -111,7 +111,7 @@ class MainKtTest {
 
 //      Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes no direct suppliers
             val supplyChainRepoThatReturnsAFixedResponseThatHasNoDirectSuppliers = object: SupplyChainRepo {
-                override fun fetchCompanySupplyChain(companyId: Any): SupplyChain {
+                override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
                     if (companyId == "ZC788") {
                         return SupplyChain(
                             directSuppliers = listOf(""),
@@ -131,6 +131,33 @@ class MainKtTest {
 
             assertEquals(expected, actual)
         }
+
+        @Test
+        fun `When 'U' is not a recognised user, and empty list is returned`() {
+
+            val supplyChainRepoMock = object: SupplyChainRepo {
+                override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
+                    if (companyId == "ZC788") {
+                        return SupplyChain(
+                            directSuppliers = listOf(""),
+                            indirectSuppliers = listOf("ZS222")
+                        )
+                    }
+                    return SupplyChain(
+                        directSuppliers = listOf(""),
+                        indirectSuppliers = listOf("")
+                    )
+                }
+            }
+
+            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoMock)
+            val expected: List<String> = emptyList()
+            val actual = domain.getDirectSuppliersForUser("Z")
+            println(actual.size)
+
+            assertEquals(expected, actual)
+        }
+
     }
 
 
