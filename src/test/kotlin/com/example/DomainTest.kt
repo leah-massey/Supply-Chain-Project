@@ -1,13 +1,11 @@
 package com.example
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class MainKtTest {
-//        Spec:
+class DomainTest {
+    //        Spec:
 //        Given a user [U] is present in a top level customer organisation [O]
 //        And an organisation [O] has a  list of direct suppliers [DirSup]
 //        When [U] requests a list of direct suppliers
@@ -16,7 +14,7 @@ class MainKtTest {
     @Nested
     inner class DomainTesting {
 
-        //      Somehow create scenario that : when domain tries to look up company for ZU123 it gets back company ZC789
+        // when domain tries to look up company for ZU123 it always gets back company ZC789
         val userRepoThatReturnsAFixedCompanyForAFixedUser = object : UserRepo {
             override fun fetchCompanyIdThatUserBelongsTo(userId: String): String? {
                 if (userId == "ZU123") {
@@ -114,7 +112,7 @@ class MainKtTest {
                 override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
                     if (companyId == "ZC788") {
                         return SupplyChain(
-                            directSuppliers = listOf(""),
+                            directSuppliers = emptyList(),
                             indirectSuppliers = listOf("ZS222")
                         )
                     }
@@ -126,14 +124,14 @@ class MainKtTest {
             }
 
             val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsAFixedResponseThatHasNoDirectSuppliers)
-            val expected = listOf("")
+            val expected: List<String> = emptyList()
             val actual = domain.getDirectSuppliersForUser("ZU122")
 
             assertEquals(expected, actual)
         }
 
         @Test
-        fun `When 'U' is not a recognised user, and empty list is returned`() {
+        fun `When 'U' is not a recognised user, an empty list is returned`() {
 
             val supplyChainRepoMock = object: SupplyChainRepo {
                 override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
@@ -162,15 +160,3 @@ class MainKtTest {
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-

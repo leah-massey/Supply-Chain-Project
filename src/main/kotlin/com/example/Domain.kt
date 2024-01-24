@@ -5,7 +5,13 @@ class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
     fun getDirectSuppliersForUser(userId: String): List<String> {
 
         //todo: Handle Errors
-        val companyId: String = userRepo.fetchCompanyIdThatUserBelongsTo(userId)
+        val companyId: String? = userRepo.fetchCompanyIdThatUserBelongsTo(userId)
+
+        if (companyId == null) {
+            println("the user is not valid")
+            return emptyList()
+        }
+
         println("company Id: ${companyId}")
 
         //todo: Handle Errors
@@ -18,6 +24,7 @@ class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
     }
 
     private fun findDirectSuppliersForCompany(supplyChain: SupplyChain, companyId: Any): List<String> {
+
         return supplyChain.directSuppliers
     }
 }
