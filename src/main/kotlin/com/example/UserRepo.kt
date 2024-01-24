@@ -1,4 +1,4 @@
 package com.example
 interface UserRepo {
-    fun fetchCompanyIdThatUserBelongsTo(userId: Any): String
+    fun fetchCompanyIdThatUserBelongsTo(userId: String): String
 }
