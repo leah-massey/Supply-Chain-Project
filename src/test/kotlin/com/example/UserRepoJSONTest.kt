@@ -18,10 +18,10 @@ class UserRepoJSONTest {
     }
 
     @Test
-    fun `an unrecognised user returns an error ?????`() {
+    fun `an unrecognised user returns null`() {
 
         val underTest = UserRepoJSON()
-        val expected: String = "ERROR?"
+        val expected: String? = null
         val actual: String? = underTest.fetchCompanyIdThatUserBelongsTo("ZU450")
 
         assertEquals(expected, actual)
