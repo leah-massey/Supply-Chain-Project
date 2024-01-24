@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test
 
 class UserRepoJSONTest {
 
-
-
     @Test
     fun `the company to which a user belongs is returned as a string`() {
 
