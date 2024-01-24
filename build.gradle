@@ -32,6 +32,8 @@ test {
 
 dependencies {
     implementation("org.http4k:http4k-core:${http4kVersion}")
+    implementation("org.json:json:20231013")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
     testImplementation("org.http4k:http4k-testing-approval:${http4kVersion}")
     testImplementation("org.http4k:http4k-testing-hamkrest:${http4kVersion}")
