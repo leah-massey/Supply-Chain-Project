@@ -9,7 +9,6 @@ import org.http4k.server.asServer
 fun main(args: Array<String>) {
 
     val printingApp: HttpHandler = DebuggingFilters.PrintRequest().then(app)
-
     val server = printingApp.asServer(SunHttp(9000)).start()
 
     println("Server started on " + server.port())
