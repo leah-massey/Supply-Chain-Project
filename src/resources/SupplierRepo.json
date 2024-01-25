@@ -1,0 +1,42 @@
+[{
+  "supplierId": "ZS789",
+  "supplierName": "Potato King",
+  "customers": [
+    "ZC123", "ZC321"
+  ]
+},
+  {
+    "supplierId": "ZS456",
+    "supplierName": "Sam's Apples",
+    "customers": [
+      "ZC123", "ZS013"
+    ]
+  },
+  {
+    "supplierId": "ZS111",
+    "supplierName": "Bags R Us",
+    "customers": [
+      "ZC123", "ZC321", "ZC789"
+    ]
+  },
+  {
+    "supplierId": "ZS456",
+    "supplierName": "Eggs Ltd",
+    "customers": [
+      "ZC321"
+    ]
+  },
+  {
+    "supplierId": "ZS222",
+    "supplierName": "Meatless Meat Pies",
+    "customers": [
+      "ZC321", "ZC789"
+    ]
+  },
+  {
+    "supplierId": "ZS333",
+    "supplierName": "Nom",
+    "customers": [
+      "ZC789"
+    ]
+  }]
