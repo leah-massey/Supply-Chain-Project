@@ -12,4 +12,13 @@ class SupplyChainRepoJSONTest {
 
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun `an empty supply chain is returned when 'O' is not in the supplyChainRepo`() {
+        val underTest = SupplyChainRepoJSON()
+        val expected = SupplyChain(directSuppliers = emptyList(), indirectSuppliers = emptyList())
+        val actual = underTest.fetchCompanySupplyChain("ZC781")
+
+        assertEquals(expected, actual)
+    }
 }

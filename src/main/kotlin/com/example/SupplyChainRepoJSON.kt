@@ -17,7 +17,7 @@ class SupplyChainRepoJSON: SupplyChainRepo {
             supplier.companyId == companyId
         }
 
-        // if company does not have a supply chain
+        // if company does not have a supply chain return empty lists
         if (companySupplyChain == null) {
             return SupplyChain(emptyList(), emptyList())
         }
