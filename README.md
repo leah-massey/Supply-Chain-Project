@@ -1,6 +1,6 @@
 # Supply Chain Project
 
-This project has been built to help improve my understanding of Kotlin, project architecture and design and http4k. 
+This is a Kotlin project, built  project architecture and design and http4k. 
 <br/><br/>
 The tasks I am completing are originally listed [here](https://github.com/aceakash/programming-exercises/blob/main/supply_chain.md)
 
