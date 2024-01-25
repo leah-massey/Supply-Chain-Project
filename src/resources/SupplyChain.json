@@ -7,7 +7,7 @@
     }
   },
   {
-    "companyId": "ZC456",
+    "companyId": "ZC321",
     "suppliers": {
       "directSuppliers": ["ZS789", "ZS111"],
       "indirectSuppliers": ["ZS456", "ZS222"]
