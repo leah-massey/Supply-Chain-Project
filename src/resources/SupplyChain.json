@@ -1,0 +1,30 @@
+[
+  {
+    "companyId": "ZC123",
+    "suppliers": {
+      "directSuppliers": ["ZS789"],
+      "indirectSuppliers": ["ZS456", "ZS111"]
+    }
+  },
+  {
+    "companyId": "ZC456",
+    "suppliers": {
+      "directSuppliers": ["ZS789", "ZS111"],
+      "indirectSuppliers": ["ZS456", "ZS222"]
+    }
+  },
+  {
+    "companyId": "ZC789",
+    "suppliers": {
+      "directSuppliers": ["ZS111"],
+      "indirectSuppliers": ["ZS222", "ZS333"]
+    }
+  },
+  {
+    "companyId": "ZC711",
+    "suppliers": {
+      "directSuppliers": [],
+      "indirectSuppliers": []
+    }
+  }
+]
