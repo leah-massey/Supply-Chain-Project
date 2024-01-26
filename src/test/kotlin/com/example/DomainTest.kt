@@ -294,7 +294,51 @@ class DomainTest {
             assertEquals(expected, actual)
         }
 
+        @Test
+        fun `if no 'D' in 'O' has matching specified ID, but specified ID matches an indirect supplier in 'O', an empty 'D' is still returned`() {
+            val supplyChainRepoThatReturnsAFixedListOfDirectSuppliers = object : SupplyChainRepo {
+                override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
+                    if (companyId == "ZC789") {
+                        return SupplyChain(
+                            directSuppliers = listOf("ZS455"),
+                            indirectSuppliers = listOf("ZS457",  "ZS456")
+                        )
+                    }
+                    return SupplyChain(
+                        directSuppliers = emptyList(),
+                        indirectSuppliers = emptyList()
+                    )
+                }
+            }
 
+            val supplierRepoThatReturnsFixedSupplier = object: SupplierRepo {
+                override fun fetchSupplierById(supplierId: String): Supplier {
+                    if (supplierId == "ZS456" ) {
+                        return Supplier(
+                            supplierId = "ZS456",
+                            supplierName = "Potato King",
+                            customers = listOf("ZC123", "ZC321")
+                        )
+                    }
+                    return Supplier(
+                        supplierId = "",
+                        supplierName = "",
+                        customers = emptyList()
+                    )
+                }
+            }
+
+            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsAFixedListOfDirectSuppliers, supplierRepoThatReturnsFixedSupplier)
+            val expected = Supplier(
+                supplierId = "",
+                supplierName = "",
+                customers = emptyList()
+            )
+            val actual = domain.getDirectSupplierThatHasSpecifiedId("ZS456", "ZU123")
+
+            assertEquals(expected, actual)
+
+        }
     }
 
 
