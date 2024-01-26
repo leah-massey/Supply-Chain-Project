@@ -1,4 +1,4 @@
-Story:
+## User Story 1:
 As an admin, at a top level customer organisation, I want to view a list of my direct suppliers.
 
 Spec:
@@ -46,9 +46,6 @@ Test: the supply chain belonging to [O] is returned
 - When the domain queries the supplyChainRepo with [O] "ZC789"
 - Then assert that reply is SupplyChain(directSuppliers = listOf("ZS111"), indirectSuppliers = listOf("ZS222", "ZS333"))
 
-
-Test: an empty list 
-Test 
 
 
 
