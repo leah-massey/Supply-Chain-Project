@@ -12,7 +12,7 @@ class DomainTest {
 //        Then [DirSup] is returned
 
     @Nested
-    inner class DomainTesting {
+    inner class GetDirectSuppliersForUserFunctionTesting {
 
         // when domain tries to look up company for ZU123 it always gets back company ZC789
         val userRepoThatReturnsAFixedCompanyForAFixedUser = object : UserRepo {
@@ -158,5 +158,8 @@ class DomainTest {
 
     }
 
+    @Nested
+    inner class GetDirectSupplierThatHasGivenIdFunctionTesting{
+    }
 
 }
