@@ -23,6 +23,17 @@ class DomainTest {
                 return null
             }
         }
+
+        val supplierRepoPlaceHolder = object : SupplierRepo {
+            override fun fetchSupplierById(supplierId: String): Supplier {
+                return Supplier(
+                    supplierId = "ZS456",
+                    supplierName = "Potato King",
+                    customers = listOf("ZC123", "ZC321")
+                )
+            }
+        }
+
         @Test
         fun `When 'O' only has one direct supplier in 'DirSup', that supplier is returned to the 'U'`() {
 
@@ -41,9 +52,27 @@ class DomainTest {
                 }
             }
 
+            val supplierRepoThatReturnsFixedSupplier = object : SupplierRepo {
+                override fun fetchSupplierById(supplierId: String): Supplier {
+                    if (supplierId == "ZS456") {
+                        return Supplier(
+                            supplierId = "ZS456",
+                            supplierName = "Potato King",
+                            customers = listOf("ZC123", "ZC321")
+                        )
+                    }
+                   return Supplier(
+                       supplierId = "",
+                       supplierName = "",
+                       customers = listOf("")
+                   )
+                }
+            }
+
             val domain = Domain(
                 userRepoThatReturnsAFixedCompanyForAFixedUser,
-                supplyChainRepoThatReturnsFixedListOfOneDirectSupplier
+                supplyChainRepoThatReturnsFixedListOfOneDirectSupplier,
+                supplierRepoThatReturnsFixedSupplier
             )
             val expected = listOf("ZS456")
             val actual = domain.getDirectSuppliersForUser("ZU123")
@@ -70,7 +99,7 @@ class DomainTest {
                 }
             }
 
-            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsFixedListOfMultipleDirectSuppliers)
+            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsFixedListOfMultipleDirectSuppliers, supplierRepoPlaceHolder)
             val expected = listOf("ZS455", "ZS457")
             val actual = domain.getDirectSuppliersForUser("ZU123")
 
@@ -96,7 +125,7 @@ class DomainTest {
                 }
             }
 
-            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsAFixedCombinationOfDirectAndIndirectSuppliers)
+            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsAFixedCombinationOfDirectAndIndirectSuppliers, supplierRepoPlaceHolder)
             val expected = listOf("ZS455", "ZS456")
             val actual = domain.getDirectSuppliersForUser("ZU123")
 
@@ -123,7 +152,7 @@ class DomainTest {
                 }
             }
 
-            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsAFixedResponseThatHasNoDirectSuppliers)
+            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsAFixedResponseThatHasNoDirectSuppliers, supplierRepoPlaceHolder)
             val expected: List<String> = emptyList()
             val actual = domain.getDirectSuppliersForUser("ZU122")
 
@@ -148,7 +177,7 @@ class DomainTest {
                 }
             }
 
-            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoMock)
+            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoMock, supplierRepoPlaceHolder)
             val expected: List<String> = emptyList()
             val actual = domain.getDirectSuppliersForUser("Z")
             println(actual.size)
@@ -159,7 +188,114 @@ class DomainTest {
     }
 
     @Nested
-    inner class GetDirectSupplierThatHasGivenIdFunctionTesting{
+    inner class GetDirectSupplierThatHasSpecifiedIdFunctionTesting{
+
+//      when domain tries to look up company for ZU123 it gets back company ZC789
+        val userRepoThatReturnsAFixedCompanyForAFixedUser = object : UserRepo {
+            override fun fetchCompanyIdThatUserBelongsTo(userId: String): String? {
+                if (userId == "ZU123") {
+                    return "ZC789"
+                }
+            return null
+            }
+        }
+
+        @Test
+        fun `a 'D' present in 'O', whose ID also matches the specified ID is returned`() {
+
+//          When domain tries to look up a list of suppliers for ZC789 it gets back a supply chain that includes [D] (ZS456) -> [ZS456, ZS111]
+            val supplyChainRepoThatReturnsAFixedListOfDirectSuppliers = object : SupplyChainRepo {
+                override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
+                    if (companyId == "ZC789") {
+                        return SupplyChain(
+                            directSuppliers = listOf("ZS455", "ZS456"),
+                            indirectSuppliers = listOf("ZS457")
+                        )
+                    }
+                    return SupplyChain(
+                        directSuppliers = emptyList(),
+                        indirectSuppliers = emptyList()
+                    )
+                }
+            }
+
+            val supplierRepoThatReturnsFixedSupplier = object: SupplierRepo {
+                override fun fetchSupplierById(supplierId: String): Supplier {
+                    if (supplierId == "ZS456" ) {
+                        return Supplier(
+                            supplierId = "ZS456",
+                            supplierName = "Potato King",
+                            customers = listOf("ZC123", "ZC321")
+                        )
+                    }
+                return Supplier(
+                    supplierId = "",
+                    supplierName = "",
+                    customers = emptyList()
+                )
+                }
+            }
+
+            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsAFixedListOfDirectSuppliers, supplierRepoThatReturnsFixedSupplier)
+            val expected = Supplier(
+                supplierId = "ZS456",
+                supplierName = "Potato King",
+                customers = listOf("ZC123", "ZC321")
+            )
+            val actual = domain.getDirectSupplierThatHasSpecifiedId("ZS456", "ZU123")
+
+            assertEquals(expected, actual)
+        }
+
+        @Test
+        fun `if specified 'D' ID not present in 'O', an empty 'D' is returned`() {
+
+//          When domain tries to look up a list of suppliers for ZC789 it gets back a supply chain that includes [D] (ZS456) -> [ZS456, ZS111]
+            val supplyChainRepoThatReturnsAFixedListOfDirectSuppliers = object : SupplyChainRepo {
+                override fun fetchCompanySupplyChain(companyId: String): SupplyChain {
+                    if (companyId == "ZC789") {
+                        return SupplyChain(
+                            directSuppliers = listOf("ZS455", "ZS458"),
+                            indirectSuppliers = listOf("ZS457")
+                        )
+                    }
+                    return SupplyChain(
+                        directSuppliers = emptyList(),
+                        indirectSuppliers = emptyList()
+                    )
+                }
+            }
+
+            val supplierRepoThatReturnsFixedSupplier = object: SupplierRepo {
+                override fun fetchSupplierById(supplierId: String): Supplier {
+                    if (supplierId == "ZS456" ) {
+                        return Supplier(
+                            supplierId = "",
+                            supplierName = "",
+                            customers = emptyList()
+                        )
+                    }
+                    return Supplier(
+                        supplierId = "ZS456",
+                        supplierName = "Potato King",
+                        customers = listOf("ZC123", "ZC321")
+                    )
+                }
+            }
+
+            val domain = Domain(userRepoThatReturnsAFixedCompanyForAFixedUser, supplyChainRepoThatReturnsAFixedListOfDirectSuppliers, supplierRepoThatReturnsFixedSupplier)
+            val expected = Supplier(
+                supplierId = "",
+                supplierName = "",
+                customers = emptyList()
+            )
+            val actual = domain.getDirectSupplierThatHasSpecifiedId("ZS456", "ZU123")
+
+            assertEquals(expected, actual)
+        }
+
+
     }
+
 
 }

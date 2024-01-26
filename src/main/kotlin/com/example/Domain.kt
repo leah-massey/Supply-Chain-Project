@@ -1,7 +1,8 @@
 package com.example
 
-class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
+class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo, val supplierRepo: SupplierRepo) {
 
+    // todo make userID available in all functions?
     fun getDirectSuppliersForUser(userId: String): List<String> {
 
         //todo: Handle Errors
@@ -20,9 +21,19 @@ class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo) {
         return directSupplierIds
     }
 
-    fun getDirectSupplierThatHasSpecifiedId(supplierId: String): Supplier {
+    fun getDirectSupplierThatHasSpecifiedId(supplierId: String, userId: String): Supplier {
 
-        return Supplier("", "", listOf(""))
+        val supplierList: List<String> = getDirectSuppliersForUser(userId)
+
+        val doesSupplierSpecifiedByIdExistAsDirectSupplier: Boolean = supplierList.contains(supplierId)
+
+        if (!doesSupplierSpecifiedByIdExistAsDirectSupplier) {
+            return Supplier(supplierId = "", supplierName = "", customers = emptyList())
+        }
+
+        val supplier: Supplier = supplierRepo.fetchSupplierById(supplierId)
+
+        return supplier
     }
 
     private fun findDirectSuppliersForCompany(supplyChain: SupplyChain, companyId: Any): List<String> {
