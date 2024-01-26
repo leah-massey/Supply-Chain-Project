@@ -19,4 +19,19 @@ class SupplierRepoJSONTest {
 
    }
 
+    @Test
+    fun `when specified supplier is not in the supplier repo, an empty supplier object is returned`() {
+
+        val underTest = SupplierRepoJSON()
+        val expected: Supplier = Supplier(
+            supplierId = "",
+            supplierName = "",
+            customers = emptyList()
+        )
+
+        val actual: Supplier = underTest.fetchSupplierById("ZS450")
+        assertEquals(expected, actual)
+
+    }
+
 }
