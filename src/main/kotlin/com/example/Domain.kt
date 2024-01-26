@@ -31,6 +31,7 @@ class Domain(val userRepo: UserRepo, val supplyChainRepo: SupplyChainRepo, val s
             return Supplier(supplierId = "", supplierName = "", customers = emptyList())
         }
 
+        //todo handle errors
         val supplier: Supplier = supplierRepo.fetchSupplierById(supplierId)
 
         return supplier
