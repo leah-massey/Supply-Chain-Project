@@ -25,7 +25,7 @@ I want to get the details of a direct supplier that I specify by ID
 
 #### - API docs:
 
-GET /suppliers?type=direct&{id}
+GET /suppliers?type=direct&supplierId={suppliedId}
 
 Example Response:
 ```
