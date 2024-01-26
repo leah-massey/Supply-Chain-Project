@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class DomainTest {
-    //        Spec:
+//        Spec:
 //        Given a user [U] is present in a top level customer organisation [O]
 //        And an organisation [O] has a  list of direct suppliers [DirSup]
 //        When [U] requests a list of direct suppliers
