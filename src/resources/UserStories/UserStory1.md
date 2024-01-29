@@ -3,34 +3,41 @@ As an admin, at a top level customer organisation, I want to view a list of my d
 
 Spec:
 Given a user [U] is present in a top level customer organisation [O]
-And a organisation [O] has a  list of direct suppliers [DirSup]
+And an organisation [O] has a list of direct suppliers [DirSup]
 When [U] requests a list of direct suppliers
 Then [DirSup] is returned
 
 ### Tests for Domain
 Test: [O] only has one direct supplier in [DirSup]
-- Somehow create scenario that : when domain tries to look up company for ZU123 it gets back company ZC789
-- Somehow create scenario that : When domain tries to look up a list of suppliers for ZC789 it gets back a supply chain that includes direct suppliers (ZS456) (ie. listOf("ZS456"))
+- Fake a scenario where : when domain tries to look up organisation for ZU123 it gets back organisation ZC789
+- Fake a scenario where : When domain tries to look up a list of suppliers for ZC789 it gets back a supply chain that includes direct suppliers (ZS456) (ie. listOf("ZS456"))
 - When a user queries the domain for the direct suppliers
-- Then assert that reply [ZS456] (ie.listOf("ZS456"))
+- Then assert that reply is [ZS456] 
 
 Test: [O] has multiple direct suppliers in [DirSup] 
-- Somehow create scenario that : when domain tries to look up company for ZU122 it gets back ZC788
-- Somehow create scenario that : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455, ZS456)
+- Fake a scenario where : when domain tries to look up organisation for ZU122 it gets back ZC788
+- Fake a scenario where : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455, ZS456)
 - When a user queries the domain for the direct suppliers
-- Then assert that reply [ZS455, ZS456]
+- Then assert that reply is [ZS455, ZS456]
 
 Test: [O] has both direct and indirect suppliers 
-- Somehow create scenario that : when domain tries to look up company for ZU122 it gets back ZC788
-- Somehow create scenario that : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455, ZS456) and indirect suppliers (ZS457)
+- Fake a scenario where : when domain tries to look up organisation for ZU122 it gets back ZC788
+- Fake a scenario where : When domain tries to look up suppliers for ZC788 it gets back a supply chain that includes direct suppliers (ZS455, ZS456) and indirect suppliers (ZS457)
 - When a user queries the domain for the direct suppliers
-- Then assert that reply [ZS455, ZS456]
+- Then assert that reply is [ZS455, ZS456]
 
 Test: [O] has no direct suppliers but some indirect
-- Somehow create scenario that : when domain tries to look up company for ZU123 it gets back ZC789
-- Somehow create scenario that : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes no direct suppliers
+- Fake a scenario where : when domain tries to look up organisation for ZU123 it gets back ZC789
+- Fake a scenario where : When domain tries to look up suppliers for ZC789 it gets back a supply chain that includes no direct suppliers
 - When a user queries the domain for the direct suppliers
-- Then assert that reply []
+- Then assert that reply is []
+
+Test: [O] has no suppliers at all 
+- Fake a scenario where : when domain tries to look up organisation for ZU123 it gets back ZC789
+- Fake a scenario where : When domain tries to look up suppliers for ZC789 it gets back a supply chain that is empty
+- When a user queries the domain for the direct suppliers
+- Then assert that reply is []
+
 
 ### Tests for UserRepoJson
 Test: [O] to which [U] belongs is returned as a string
